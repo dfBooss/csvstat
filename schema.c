@@ -31,10 +31,10 @@ char **schema_read_header(FILE *file, int *cols) {
 
 long long schema_scan_types(FILE *file, char **col_names, int cols,
                             ValueType *types) {
-    (void)col_names; // пока не используется, но оставим
+    (void)col_names; // тут было какая то идея но она пропала
 
     for (int i = 0; i < cols; i++) {
-        types[i] = TYPE_INT;  // изначально самый "узкий" тип
+        types[i] = TYPE_INT;
     }
 
     long long rows = 0;
@@ -47,7 +47,7 @@ long long schema_scan_types(FILE *file, char **col_names, int cols,
 
         if (fc != cols) {
             csv_free_fields(fields, fc);
-            continue;   // некорректная строка — пропускаем
+            continue;
         }
 
         for (int i = 0; i < cols; i++) {
