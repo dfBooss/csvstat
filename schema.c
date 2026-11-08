@@ -4,18 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* функция для кавычек в имени столбца. */
-static void print_escaped(const char *s) {
-    for (const char *p = s; *p; p++) {
-        if (*p == '"') {
-            putchar('"');
-            putchar('"');
-        } else {
-            putchar(*p);
-        }
-    }
-}
-
 char **schema_read_header(FILE *file, int *cols) {
     char *line = csv_read_line(file);
     if (!line) return NULL;
@@ -31,7 +19,7 @@ char **schema_read_header(FILE *file, int *cols) {
 
 long long schema_scan_types(FILE *file, char **col_names, int cols,
                             ValueType *types) {
-    (void)col_names; // тут было какая то идея но она пропала
+    (void)col_names;
 
     for (int i = 0; i < cols; i++) {
         types[i] = TYPE_INT;
@@ -64,11 +52,10 @@ long long schema_scan_types(FILE *file, char **col_names, int cols,
 
 void schema_print(long long rows, int cols, char **col_names,
                   const ValueType *types) {
-    printf("rows %lld columns %d", rows, cols);
+    printf("rows %lld columns %d\n", rows, cols);
     for (int i = 0; i < cols; i++) {
-        printf(" %d \"", i);
-        print_escaped(col_names[i]);
-        printf("\" %s", types_name(types[i]));
+        printf("%d \"", i);
+        types_print_escaped(col_names[i]);
+        printf("\" %s\n", types_name(types[i]));
     }
-    printf("\n");
 }

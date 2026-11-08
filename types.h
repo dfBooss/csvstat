@@ -7,17 +7,9 @@ typedef enum {
     TYPE_STRING
 } ValueType;
 
-/*
- * определяет тип отдельного значения по строке
- */
 ValueType types_detect(const char *s);
-
-/*
- * Возвращает строковое имя типа ("INT", "DOUBLE", "STRING").
- */
 const char *types_name(ValueType t);
-
-
 ValueType types_raise(ValueType column_type, ValueType value_type);
+void types_print_escaped(const char *s);
 
-#endif /* TYPES_H */
+#endif

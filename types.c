@@ -1,17 +1,17 @@
 #include "types.h"
+#include <stdio.h>
 #include <stdlib.h>
+
 ValueType types_detect(const char *s) {
     if (*s == '\0') return TYPE_STRING;
 
     const char *p = s;
     if (*p == '+' || *p == '-') p++;
 
-    // INT
     if (!(*p >= '0' && *p <= '9')) return TYPE_STRING;
     while (*p >= '0' && *p <= '9') p++;
     if (*p == '\0') return TYPE_INT;
 
-    // DOUBLE
     if (*p == '.') {
         p++;
         if (!(*p >= '0' && *p <= '9')) return TYPE_STRING;
@@ -21,6 +21,7 @@ ValueType types_detect(const char *s) {
 
     return TYPE_STRING;
 }
+
 const char *types_name(ValueType t) {
     switch (t) {
         case TYPE_INT:    return "INT";
@@ -38,4 +39,15 @@ ValueType types_raise(ValueType column_type, ValueType value_type) {
         return TYPE_DOUBLE;
     }
     return TYPE_INT;
+}
+
+void types_print_escaped(const char *s) {
+    for (const char *p = s; *p; p++) {
+        if (*p == '"') {
+            putchar('"');
+            putchar('"');
+        } else {
+            putchar(*p);
+        }
+    }
 }

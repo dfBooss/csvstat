@@ -8,6 +8,7 @@ void stats_init(ColumnStats *st, ValueType type, long long count) {
     st->type = type;
     st->count = count;
 }
+
 void stats_update(ColumnStats *st, const char *value, int is_first) {
     if (st->type == TYPE_INT) {
         long long v = strtoll(value, NULL, 10);
@@ -19,6 +20,7 @@ void stats_update(ColumnStats *st, const char *value, int is_first) {
             if (v < st->int_min) st->int_min = v;
             if (v > st->int_max) st->int_max = v;
         }
+
         st->int_sum += v;
         if (v > 0) st->int_positive++;
         if (v < 0) st->int_negative++;
@@ -34,9 +36,11 @@ void stats_update(ColumnStats *st, const char *value, int is_first) {
             if (v < st->double_min) st->double_min = v;
             if (v > st->double_max) st->double_max = v;
         }
+
         st->double_sum += v;
         if (v > 0.0) st->double_positive++;
         if (v < 0.0) st->double_negative++;
+
     } else if (st->type == TYPE_STRING) {
         int len = (int)strlen(value);
         if (is_first) {
@@ -50,10 +54,13 @@ void stats_update(ColumnStats *st, const char *value, int is_first) {
         if (len == 0) st->str_empty++;
     }
 }
+
 void stats_print(const ColumnStats *st, int index, const char *name,
                  long long rows) {
-    printf("column %d name \"%s\" type %s\n", index, name,
-           types_name(st->type));
+    /* Заголовок блока: одна строка */
+    printf("column %d name \"", index);
+    types_print_escaped(name);
+    printf("\" type %s\n", types_name(st->type));
     printf("nulls 0\n");
 
     if (st->type == TYPE_INT) {
